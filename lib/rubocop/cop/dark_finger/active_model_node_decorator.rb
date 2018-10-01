@@ -56,7 +56,8 @@ module RuboCop
         private
 
         def nested_in_with_options?
-          parent&.method_name == :with_options
+          return true if parent&.method_name == :with_options
+          return true if parent&.begin_type? && parent&.parent&.method_name == :with_options
         end
 
         def nested_directly_in_class?

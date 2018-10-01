@@ -62,7 +62,7 @@ module RuboCop::Cop::DarkFinger
         expect(has_one_node.ignore_due_to_nesting?).to be_falsey
       end
 
-      it 'returns false for nodes that are inside a with_options block' do
+      it 'returns false for nodes single nodes inside a with_options block' do
         source = <<-EOS
           class Foo
             with_options dependent: :destroy do |l|
@@ -73,6 +73,23 @@ module RuboCop::Cop::DarkFinger
 
         class_node = node_for(source)
         has_one_node = described_class.new(class_node.child_nodes.last.child_nodes.last)
+        expect(has_one_node.source).to eq('l.has_one :foo')
+        expect(has_one_node.ignore_due_to_nesting?).to be_falsey
+      end
+
+      it 'returns false for nodes inside a begin/end inside a with_options block' do
+        source = <<-EOS
+          class Foo
+            with_options dependent: :destroy do |l|
+              l.has_one :foo
+              l.has_one :bar
+            end
+          end
+        EOS
+
+        class_node = node_for(source)
+        has_one_node = described_class.new(class_node.child_nodes.last.child_nodes.last.child_nodes.first)
+        expect(has_one_node.source).to eq('l.has_one :foo')
         expect(has_one_node.ignore_due_to_nesting?).to be_falsey
       end
 

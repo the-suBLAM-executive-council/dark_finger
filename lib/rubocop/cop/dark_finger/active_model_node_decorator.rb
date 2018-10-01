@@ -4,6 +4,7 @@ module RuboCop
       class ActiveModelNodeDecorator < SimpleDelegator
         def initialize(node)
           super
+          raise "Cannot decorate nil node" if node.nil?
         end
 
         def node_type
@@ -56,8 +57,19 @@ module RuboCop
         private
 
         def nested_in_with_options?
-          return true if parent&.method_name == :with_options
-          return true if parent&.begin_type? && parent&.parent&.method_name == :with_options
+          parent_is_with_options? || grandparent_is_with_options?
+        end
+
+        def parent_is_with_options?
+          parent.respond_to?(:method_name) && parent&.method_name == :with_options
+        end
+
+        def grandparent_is_with_options?
+          grandparent = parent&.parent
+          return false unless grandparent
+          return false unless grandparent.respond_to?(:method_name)
+
+          parent.begin_type? && grandparent.method_name == :with_options
         end
 
         def nested_directly_in_class?

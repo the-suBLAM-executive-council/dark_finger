@@ -50,7 +50,8 @@ For example, here is the default config:
 require: dark_finger
 
 DarkFinger/ModelStructure:
-  enabled: true
+  Include:
+    - 'app/models/*'
   required_order:
     - module
     - include

@@ -25,7 +25,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
   def expect_comment_offense(cop, expected_comment)
     expect(cop.offenses.size).to eq(1)
     expect(cop.offenses.first.message).
-      to match(%Q(Expected preceeding comment: "## #{expected_comment} ##"))
+      to match(%Q(Expected preceeding comment: "#{expected_comment}"))
   end
 
   def cop_for(order: [], comments: {})
@@ -88,15 +88,15 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
     cop = cop_for(
       order: [described_class::VALIDATION, described_class::SCOPE],
       comments: {
-        described_class::ASSOCIATION => 'Relationships',
-        described_class::ATTRIBUTES => 'Attributes',
-        described_class::CALLBACK => 'Callbacks',
-        described_class::CONSTANT => 'Constants',
-        described_class::ENUM => 'Enums',
-        described_class::INCLUDE => 'Includes',
-        described_class::MODULE => 'Modules',
-        described_class::SCOPE => 'Scopes',
-        described_class::VALIDATION => 'Validations',
+        described_class::ASSOCIATION => '## Relationships ##',
+        described_class::ATTRIBUTES => '## Attributes ##',
+        described_class::CALLBACK => '## Callbacks ##',
+        described_class::CONSTANT => '## Constants ##',
+        described_class::ENUM => '## Enums ##',
+        described_class::INCLUDE => '## Includes ##',
+        described_class::MODULE => '## Modules ##',
+        described_class::SCOPE => '## Scopes ##',
+        described_class::VALIDATION => '## Validations ##',
       }
     )
 

@@ -64,15 +64,15 @@ DarkFinger/ModelStructure:
     - class_method
     - instance_method
   required_comments:
-    association: Relationships
-    attribute: Attributes
-    callback: Callbacks
-    constant: Constants
-    enum: Enums
-    include: Includes
-    module: Modules
-    scope: Scopes
-    validation: Validation
+    association: '# Relationships'
+    attribute: '# Attributes'
+    callback: '# Callbacks'
+    constant: '# Constants'
+    enum: '# Enums'
+    include: '# Includes'
+    module: '# Modules'
+    scope: '# Scopes'
+    validation: '# Validations'
 
 ```
 

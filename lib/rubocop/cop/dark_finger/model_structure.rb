@@ -38,15 +38,15 @@ module RuboCop
         ]
 
         DEFAULT_REQUIRED_COMMENTS = {
-          ASSOCIATION => 'Relationships',
-          ATTRIBUTES => 'Attributes',
-          CALLBACK => 'Callbacks',
-          CONSTANT => 'Constants',
-          ENUM => 'Enums',
-          INCLUDE => 'Includes',
-          MODULE => 'Modules',
-          SCOPE => 'Scopes',
-          VALIDATION => 'Validations'
+          ASSOCIATION => '# Relationships',
+          ATTRIBUTES => '# Attributes',
+          CALLBACK => '# Callbacks',
+          CONSTANT => '# Constants',
+          ENUM => '# Enums',
+          INCLUDE => '# Includes',
+          MODULE => '# Modules',
+          SCOPE => '# Scopes',
+          VALIDATION => '# Validations'
         }
 
         attr_reader :required_order, :required_comments
@@ -118,8 +118,8 @@ module RuboCop
           return false unless required_comments[class_element]
 
           comment = node.preceeding_comment(processed_source)
-          unless comment && comment =~ Regexp.new(%Q(^\s*##\s*#{required_comments[class_element]} ##$))
-            add_offense(node, message: "Expected preceeding comment: \"## #{required_comments[class_element]} ##\"")
+          unless comment && comment.strip == required_comments[class_element]
+            add_offense(node, message: "Expected preceeding comment: \"#{required_comments[class_element]}\"")
           end
         end
 

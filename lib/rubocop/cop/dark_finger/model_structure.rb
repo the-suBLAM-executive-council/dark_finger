@@ -132,11 +132,15 @@ module RuboCop
         def detect_order_violation(node)
           if order_violation_detected?
             @order_violation_reported = true
-            add_offense(
-              node,
-              message: "Model elements must appear in order: \n\n* #{required_order.join("\n* ")}\n".freeze
-            )
+            message = "Model elements must appear in order:#{to_bullet_list(required_order)}\n"
+            message << "Observed order:#{to_bullet_list(class_elements_seen)}"
+
+            add_offense(node, message: message)
           end
+        end
+
+        def to_bullet_list(array)
+          "\n* #{array.join("\n* ")}\n"
         end
 
         def order_violation_detected?

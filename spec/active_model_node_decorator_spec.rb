@@ -4,13 +4,16 @@ require_relative '../lib/rubocop/cop/dark_finger/active_model_node_decorator.rb'
 
 module RuboCop::Cop::DarkFinger
   describe ActiveModelNodeDecorator do
-    def node_for(source)
-      described_class.new(parse_source(source).ast)
+    def node_for(source, misc_method_names: [])
+      described_class.new(
+        parse_source(source).ast,
+        misc_method_names: misc_method_names
+      )
     end
 
     describe '#node_type' do
-      def node_type_for(source)
-        node_for(source).node_type
+      def node_type_for(source, misc_method_names: [])
+        node_for(source, misc_method_names: misc_method_names).node_type
       end
 
       it 'returns nil for unknown nodes' do
@@ -46,6 +49,12 @@ module RuboCop::Cop::DarkFinger
       it 'identifies validations' do
         expect(node_type_for('validates :foo, presence: true')).to eq(ModelStructure::VALIDATION)
         expect(node_type_for('validate :foo')).to eq(ModelStructure::VALIDATION)
+      end
+
+      it 'identifies "misc" methods' do
+        expect(
+          node_type_for('serialize :foos, Array', misc_method_names: [:serialize])
+        ).to eq(ModelStructure::MISC)
       end
     end
 

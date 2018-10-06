@@ -2,9 +2,13 @@ module RuboCop
   module Cop
     module DarkFinger
       class ActiveModelNodeDecorator < SimpleDelegator
-        def initialize(node)
-          super
+
+        attr_reader :misc_method_names
+
+        def initialize(node, misc_method_names: [])
+          super(node)
           raise "Cannot decorate nil node" if node.nil?
+          @misc_method_names = misc_method_names
         end
 
         def node_type
@@ -22,6 +26,8 @@ module RuboCop
             ModelStructure::ENUM
           elsif attributes?
             ModelStructure::ATTRIBUTES
+          elsif misc_method?
+            ModelStructure::MISC
           else
             nil
           end
@@ -118,6 +124,10 @@ module RuboCop
 
         def attributes?
           method_name =~ /^attr_/
+        end
+
+        def misc_method?
+          misc_method_names.include?(method_name)
         end
       end
 

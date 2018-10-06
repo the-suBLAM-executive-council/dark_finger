@@ -3,7 +3,6 @@
 # TODO:
 #
 # * Constructors
-# * Handle "Misc" stuff
 
 require File.dirname(__FILE__) + '/active_model_node_decorator'
 
@@ -19,6 +18,7 @@ module RuboCop
         ENUM = :enum
         INCLUDE = :include
         INSTANCE_METHOD = :instance_method
+        MISC = :misc
         MODULE = :module
         SCOPE = :scope
         VALIDATION = :validation
@@ -33,6 +33,7 @@ module RuboCop
           SCOPE,
           ATTRIBUTES,
           CALLBACK,
+          MISC,
           CLASS_METHOD,
           INSTANCE_METHOD,
         ]
@@ -49,17 +50,21 @@ module RuboCop
           VALIDATION => '# Validations'
         }
 
-        attr_reader :required_order, :required_comments
+        DEFAULT_MISC_METHOD_NAMES = []
 
-        def initialize(*args, required_order: nil, required_comments: nil, **_)
+        attr_reader :required_order, :required_comments, :misc_method_names
+
+        def initialize(*args, required_order: nil, required_comments: nil, misc_method_names: nil, **_)
           super
           @class_elements_seen = []
           @required_order = required_order || cop_config['required_order'] || DEFAULT_REQUIRED_ORDER
           @required_comments = required_comments || cop_config['required_comments'] || DEFAULT_REQUIRED_COMMENTS
+          @misc_method_names = misc_method_names || cop_config['misc_method_names'] || DEFAULT_MISC_METHOD_NAMES
 
-          # symbolize order/comments
+          # symbolize configs
           @required_order.map!(&:to_sym)
           @required_comments = Hash[ @required_comments.map {|k,v| [k.to_sym, v]} ]
+          @misc_method_names.map!(&:to_sym)
         end
 
         def on_send(node)
@@ -89,7 +94,7 @@ module RuboCop
         def process_node(node, seen_element: nil)
           return if @order_violation_reported
 
-          node = ActiveModelNodeDecorator.new(node)
+          node = ActiveModelNodeDecorator.new(node, misc_method_names: misc_method_names)
           seen_element ||= node.node_type
 
           return unless seen_element

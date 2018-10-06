@@ -28,9 +28,9 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       to match(%Q(Expected preceeding comment: "#{expected_comment}"))
   end
 
-  def cop_for(order: [], comments: {})
+  def cop_for(order: [], comments: {}, misc_method_names: [])
     described_class.new(
-      config, required_order: order, required_comments: comments
+      config, required_order: order, required_comments: comments, misc_method_names: misc_method_names
     )
   end
 
@@ -352,6 +352,45 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
           validates :field, presence: true
         EOS
       )
+    end
+  end
+
+  describe 'misc method calls' do
+    it 'detects order violations' do
+      cop = cop_for(
+        order: [described_class::MISC, described_class::SCOPE],
+        misc_method_names: ['serialize']
+      )
+
+      source = <<-EOS
+        scope :foo, -> { :bar }
+        serialize :foobars, Array
+      EOS
+
+      run_cop(cop, wrap_in_class(source))
+      expect_order_offense(cop)
+    end
+
+    it 'detects comment violations' do
+      cop = cop_for(
+        order: [described_class::MISC, described_class::SCOPE],
+        comments: {
+          described_class::MISC => "## Misc ##",
+          described_class::SCOPE => "## Scopes ##"
+        },
+        misc_method_names: ['serialize']
+      )
+
+      source = <<-EOS
+        ## Invalid comment ##
+        serialize :foobars, Array
+
+        ## Scopes ##
+        scope :foo, -> { :bar }
+      EOS
+
+      run_cop(cop, wrap_in_class(source))
+      expect_comment_offense(cop, "## Misc ##")
     end
   end
 end

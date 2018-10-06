@@ -50,6 +50,17 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
     "class Foo < ActiveRecord::Base\n  #{source}\nend"
   end
 
+  it 'raises an error for unknown when "required_order" elements are given' do
+    expect {
+      cop_for(order: [:invalid_element])
+    }.to raise_error(described_class::InvalidConfigError)
+  end
+
+  it 'raises an error for unknown when "required_comment" keys are given' do
+    expect {
+      cop_for(comments: { invalid_key: 'foo' })
+    }.to raise_error(described_class::InvalidConfigError)
+  end
 
   it 'returns no violations when everything is in order' do
     cop = cop_for(

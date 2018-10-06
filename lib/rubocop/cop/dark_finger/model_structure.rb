@@ -4,6 +4,8 @@ module RuboCop
   module Cop
     module DarkFinger
       class ModelStructure < ::RuboCop::Cop::Cop
+        class InvalidConfigError < StandardError; end
+
         ASSOCIATION = :association
         ATTRIBUTES = :attribute
         CALLBACK = :callback
@@ -17,6 +19,22 @@ module RuboCop
         MODULE = :module
         SCOPE = :scope
         VALIDATION = :validation
+
+        KNOWN_ELEMENTS = [
+          ASSOCIATION,
+          ATTRIBUTES,
+          CALLBACK,
+          CLASS_METHOD,
+          CONSTANT,
+          CONSTRUCTOR,
+          ENUM,
+          INCLUDE,
+          INSTANCE_METHOD,
+          MISC,
+          MODULE,
+          SCOPE,
+          VALIDATION,
+        ]
 
         DEFAULT_REQUIRED_ORDER = [
           MODULE,
@@ -61,6 +79,8 @@ module RuboCop
           @required_order.map!(&:to_sym)
           @required_comments = Hash[ @required_comments.map {|k,v| [k.to_sym, v]} ]
           @misc_method_names.map!(&:to_sym)
+
+          validate_config!
         end
 
         def on_send(node)
@@ -150,6 +170,20 @@ module RuboCop
         def required_order_for_elements_seen
           class_elements_seen.sort do |class_elem_1, class_elem_2|
             required_order.index(class_elem_1) <=> required_order.index(class_elem_2)
+          end
+        end
+
+        def validate_config!
+          required_order.each do |i|
+            if !KNOWN_ELEMENTS.include?(i)
+              raise(InvalidConfigError, "Unknown 'required_order' model element: #{i}")
+            end
+          end
+
+          required_comments.keys.each do |i|
+            if !KNOWN_ELEMENTS.include?(i)
+              raise(InvalidConfigError, "Unknown 'required_comments' model element: #{i}")
+            end
           end
         end
       end

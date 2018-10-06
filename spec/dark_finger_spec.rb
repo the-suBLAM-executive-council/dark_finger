@@ -245,6 +245,28 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
     end
   end
 
+  describe 'constructors' do
+    it 'detects order violations' do
+      run_and_expect_order_violation(
+        order: [described_class::CONSTRUCTOR, described_class::SCOPE],
+        source: <<-EOS
+          scope :foo, -> { :bar }
+          def initialize; end
+        EOS
+      )
+    end
+
+    it 'detects comment violations' do
+      run_and_expect_comment_violation(
+        element: described_class::CONSTRUCTOR,
+        source: <<-EOS
+          ## incorrect comment ##
+          def initialize; end
+        EOS
+      )
+    end
+  end
+
   describe 'enums' do
     it 'detects order violations' do
       run_and_expect_order_violation(

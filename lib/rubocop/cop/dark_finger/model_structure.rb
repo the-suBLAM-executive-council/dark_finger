@@ -1,9 +1,3 @@
-# bundle exec rubocop -d  -r ./path/to/this/cop.rb --only DarkFinger/ModelStructure ./app/models/foo.rb
-#
-# TODO:
-#
-# * Constructors
-
 require File.dirname(__FILE__) + '/active_model_node_decorator'
 
 module RuboCop
@@ -15,6 +9,7 @@ module RuboCop
         CALLBACK = :callback
         CLASS_METHOD = :class_method
         CONSTANT = :constant
+        CONSTRUCTOR = :constructor
         ENUM = :enum
         INCLUDE = :include
         INSTANCE_METHOD = :instance_method
@@ -34,6 +29,7 @@ module RuboCop
           ATTRIBUTES,
           CALLBACK,
           MISC,
+          CONSTRUCTOR,
           CLASS_METHOD,
           INSTANCE_METHOD,
         ]
@@ -80,7 +76,12 @@ module RuboCop
         end
 
         def on_def(node)
-          process_node(node, seen_element: INSTANCE_METHOD)
+          seen_element = if node.method_name == :initialize
+                           CONSTRUCTOR
+                         else
+                           INSTANCE_METHOD
+                         end
+          process_node(node, seen_element: seen_element)
         end
 
         def on_defs(node)

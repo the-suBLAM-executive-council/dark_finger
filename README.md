@@ -1,23 +1,64 @@
-# DarkFinger
+# Dark Finger
 
-A Rubocop extension to check the layout of ActiveModel files. The cop will
-check that elements appear together, in the right order, and commented as
-desired.
+A Rubocop extension to check the layout of ActiveModel files.
 
-Supported elements:
+At work we have found that, as our model files grew in size, there were many
+"macro" methods at the top that could become messy and inconsistent across
+files.
 
-* associations
-* attributes
-* callbacks
-* constants
-* enums
-* includes
-* modules
-* scopes
-* validations
-* class_methods
-* instance_methods
+To help keep things orderly over time, we wrote ... _**Dark Finger**_.  This
+Cop will issue warnings if the various model elements don't appear together and
+in the right order or if they are not commented as desired. The order and
+required comment (or lack thereof) is configurable.
 
+This is the kind of model file that we like (although many of ours are much
+larger):
+```ruby
+class Horse < ApplicationRecord
+  ## Includes ##
+  include GallopingMagicPowers
+  include LazerEyes
+
+  ## Enums ##
+  enum breed: %i[thoroughbred
+                 arabian
+                 american quarter horse
+                 clydesdale
+                 mustang]
+
+  ## Associations ##
+  has_many :legs
+  belongs_to :brain
+  belongs_to :saddle
+
+  ## Validations ##
+  validates_presence_of :breed
+  validates_presence_of :age
+
+  ## Scopes ##
+  scope :dead, -> { where(state: 'dead') }
+  scope :alive, -> { where(state: 'alive') }
+
+  ## Attributes ##
+  attr_accessor :promote_to_demon_horse
+
+  ## Callbacks ##
+  after_save :callbacks_are_evil_you_should_be_ashamed
+
+  ## Misc ##
+  serialize :nose_hairs, Array
+  acts_as_taggable
+
+  def self.foobario
+    # foo
+  end
+
+  def gallop_hard
+    # ...
+  end
+end
+
+```
 
 ## Installation
 
@@ -35,23 +76,26 @@ Or install it yourself as:
 
     $ gem install dark_finger
 
-## Usage
+## Usage and Configuration
 
 Install the gem. Then, in your `.rubycop.yml` file, require `dark_finger` and
 add your desired config.
 
-For example, here is the default config:
+For example:
 
-```ruby
+```yaml
 # in .rubocop.yml
-
 
 # this is required
 require: dark_finger
 
 DarkFinger/ModelStructure:
+
+  # this is also required
   Include:
     - 'app/models/*'
+
+  # specify the order that the model elements must appear in
   required_order:
     - module
     - include
@@ -62,20 +106,43 @@ DarkFinger/ModelStructure:
     - scope
     - attributes
     - callback
+    - misc
+    - constructor
     - class_method
     - instance_method
-  required_comments:
-    association: '# Relationships'
-    attribute: '# Attributes'
-    callback: '# Callbacks'
-    constant: '# Constants'
-    enum: '# Enums'
-    include: '# Includes'
-    module: '# Modules'
-    scope: '# Scopes'
-    validation: '# Validations'
 
+  # specify the comments that must appear above each group of model elements
+  required_comments:
+    association: '## Relationships ##'
+    attribute: '## Attributes ##'
+    callback: '## Callbacks ##'
+    constant: '## Constants ##'
+    enum: '## Enums ##'
+    include: '## Includes ##'
+    module: '## Modules ##'
+    scope: '## Scopes ##'
+    validation: '## Validations ##'
 ```
+
+Supported model elements:
+
+
+| Config key      | Description (when not obvious)             |
+|-----------------|--------------------------------------------|
+| association     |                                            |
+| attribute       | `attr_reader` and friends                  |
+| callback        | `after_save` et al.                        |
+| class_method    |                                            |
+| constant        |                                            |
+| constructor     |                                            |
+| enum            |                                            |
+| include         |                                            |
+| instance_method |                                            |
+| misc            | This is a configurable set of method calls |
+| module          | Any `module Foo; ...; end` declarations    |
+| scope           | Any `scope` or `default_scope` calls       |
+| validation      |                                            |
+
 
 ## License
 

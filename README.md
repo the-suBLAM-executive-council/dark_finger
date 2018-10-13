@@ -2,17 +2,21 @@
 
 A Rubocop extension to check the layout of ActiveModel files.
 
-At work we have found that, as our model files grew in size, there were many
-"macro" methods at the top that could become messy and inconsistent across
-files.
+At work we've found that, as our model files grow in size, there are many
+"macro" methods (scopes, validations, etc) at the top that become messy and
+inconsistent across files.
 
-To help keep things orderly over time, we wrote ... _**Dark Finger**_.  This
-Cop will issue warnings if the various model elements don't appear together and
-in the right order or if they are not commented as desired. The order and
-required comment (or lack thereof) is configurable.
+To help keep things orderly over time we wrote ... _**Dark Finger**_.  This
+Cop will issue warnings if the various model elements:
 
-This is the kind of model file that we like (although many of ours are much
-larger):
+1. Aren't grouped together
+2. The groups don't appear in the right order
+3. The groups aren't commented properly
+
+This is the kind of model file that we like. Notice how all the model elements
+are grouped, commented, and ordered (although ordering is not visible from just
+one file):
+
 ```ruby
 class Horse < ApplicationRecord
   ## Includes ##

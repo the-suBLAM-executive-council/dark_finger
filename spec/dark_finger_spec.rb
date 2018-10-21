@@ -149,6 +149,30 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
     expect(cop.offenses).to be_empty
   end
 
+  it 'exempts everything in the file after the first "private" from the formatting rules' do
+    source = <<-EOS
+      ## Assocations ##
+      has_one :bar
+
+      private
+
+      scope :foo
+      has_one :blarg
+      validate :bar
+    EOS
+    cop = cop_for(
+      order: [
+        described_class::VALIDATION,
+        described_class::ASSOCIATION,
+        described_class::SCOPE
+      ]
+    )
+
+    run_cop(cop, wrap_in_class(source))
+
+    expect(cop.offenses).to be_empty
+  end
+
   describe 'associations' do
     it 'detects order violations' do
       run_and_expect_order_violation(

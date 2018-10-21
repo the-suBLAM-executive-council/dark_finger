@@ -114,10 +114,16 @@ module RuboCop
 
         def process_node(node, seen_element: nil)
           return if @order_violation_reported
+          return if @seen_private_declaration
 
           node = ActiveModelNodeDecorator.new(node, misc_method_names: misc_method_names)
-          seen_element ||= node.node_type
 
+          if node.private_declaration?
+            @seen_private_declaration = true
+            return
+          end
+
+          seen_element ||= node.node_type
           return unless seen_element
 
           return if node.ignore_due_to_nesting?

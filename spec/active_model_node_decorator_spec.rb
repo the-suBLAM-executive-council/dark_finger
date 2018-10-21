@@ -156,5 +156,15 @@ module RuboCop::Cop::DarkFinger
         ).to eq('# the comment')
       end
     end
+
+    describe '#private_declaration?' do
+      it 'is true when the node is a "private" declaration' do
+        expect(node_for('private').private_declaration?).to be_truthy
+      end
+
+      it 'is false if the node isnt a "private" declaration' do
+        expect(node_for('has_many :foo').private_declaration?).to be_falsey
+      end
+    end
   end
 end

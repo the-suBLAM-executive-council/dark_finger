@@ -60,6 +60,10 @@ module RuboCop
           end
         end
 
+        def private_declaration?
+          method_name == :private && receiver.nil?
+        end
+
         private
 
         def nested_in_with_options?

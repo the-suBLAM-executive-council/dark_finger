@@ -79,7 +79,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       ]
     )
 
-    run_cop cop, <<-EOS
+    source = <<-EOS
       module Foo; end
       include Foo
       enum :foo
@@ -91,6 +91,8 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       def self.foo; end
       def bar; end
     EOS
+
+    run_cop(cop, wrap_in_class(source))
 
     expect(cop.offenses).to be_empty
   end
@@ -111,7 +113,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       }
     )
 
-    run_cop cop, <<-EOS
+    source = <<-EOS
       ## Modules ##
       module Foo; end
 
@@ -142,6 +144,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       ## Instance Methods ##
       def bar; end
     EOS
+    run_cop(cop, wrap_in_class(source))
 
     expect(cop.offenses).to be_empty
   end

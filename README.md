@@ -1,6 +1,4 @@
-# Dark Finger
-
-![Dark Finger](.github/dark_finger.jpg)
+![Dark Finger](.github/dark_finger.jpg "Dark Finger")
 
 A Rubocop extension to check the layout of ActiveModel files.
 

@@ -123,9 +123,18 @@ DarkFinger/ModelStructure:
     constant: '## Constants ##'
     enum: '## Enums ##'
     include: '## Includes ##'
+    misc: '## Misc ##'
     module: '## Modules ##'
     scope: '## Scopes ##'
     validation: '## Validations ##'
+
+  # specify the methods that are categorized as "misc"
+  misc_method_names:
+    - acts_as_list
+    - acts_as_taggable
+    - friendly_id
+    - serialize
+    - workflow
 ```
 
 Supported model elements:
@@ -147,6 +156,12 @@ Supported model elements:
 | scope           | Any `scope` or `default_scope` calls       |
 | validation      |                                            |
 
+
+Any model elements that are not included in "required order" will be ignored.
+
+Dark Finger ignores everything that appears after `private`. This may change in
+future, but for now we have just agreed that anything goes in the private
+section of our models.
 
 ## License
 

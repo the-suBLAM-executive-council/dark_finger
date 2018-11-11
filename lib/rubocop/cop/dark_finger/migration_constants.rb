@@ -49,10 +49,6 @@ module RuboCop
           end.uniq
         end
 
-        def is_class_declaration?(node)
-          node.parent.type == :class
-        end
-
         def add_allowed_constant(constant)
           @allowed_constants << constant.to_s
           @allowed_constants.uniq!

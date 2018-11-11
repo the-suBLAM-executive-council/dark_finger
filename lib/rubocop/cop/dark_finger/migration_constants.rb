@@ -55,31 +55,10 @@ module RuboCop
         end
 
         def add_module_parent_chain_for(node)
-          chain = ModuleParentChainExtractor.new(node).perform
+          chain = ModuleAncestorChainExtractor.new(node).perform
           add_allowed_constant(chain)
-        end
-      end
-
-      class ModuleParentChainExtractor
-        attr_reader :node
-
-        def initialize(node)
-          @node = node
-        end
-
-        def perform
-          module_chain = [node.children.first.const_name]
-
-          current_node = node
-          while current_node.parent && current_node.parent.module_type?
-            module_chain << current_node.parent.children.first.const_name
-            current_node = current_node.parent
-          end
-
-          module_chain.reverse.join("::")
         end
       end
     end
   end
 end
-

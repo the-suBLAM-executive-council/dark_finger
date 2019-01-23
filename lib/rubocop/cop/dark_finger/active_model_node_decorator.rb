@@ -1,7 +1,9 @@
+require 'delegate'
+
 module RuboCop
   module Cop
     module DarkFinger
-      class ActiveModelNodeDecorator < SimpleDelegator
+      class ActiveModelNodeDecorator < ::SimpleDelegator
 
         attr_reader :misc_method_names
 

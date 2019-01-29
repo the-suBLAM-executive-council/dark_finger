@@ -1,3 +1,5 @@
+require 'delegate'
+
 module RuboCop
   module Cop
     module DarkFinger

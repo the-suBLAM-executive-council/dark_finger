@@ -61,7 +61,8 @@ module RuboCop
         end
 
         def private_declaration?
-          method_name == :private && receiver.nil?
+          # need to check respond_to since this may not be called only "on_send"
+          respond_to?(:method_name) && method_name == :private && receiver.nil?
         end
 
         private

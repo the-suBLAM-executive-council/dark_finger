@@ -56,4 +56,7 @@ require: dark_finger
 DarkFinger/MigrationConstants:
   Include:
     - 'db/migrate/*.rb'
+  whitelisted_constants:
+    - 'MyConstant'
+    - 'MyOtherConstant'
 ```

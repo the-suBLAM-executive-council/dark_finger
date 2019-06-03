@@ -6,7 +6,8 @@ module RuboCop
           'Migration',
           'ActiveRecord',
           'ActiveRecord::Migration',
-          'ActiveRecord::Base'
+          'ActiveRecord::Base',
+          'ActiveRecord::IrreversibleMigration'
         ]
 
         attr_reader :allowed_constants

@@ -3,16 +3,16 @@ require 'spec_helper'
 describe RuboCop::Cop::DarkFinger::MigrationConstants do
   let(:config) { RuboCop::Config.new }
 
-  def offenses_for(source)
-    cop = described_class.new(config)
+  def offenses_for(source, **cop_options)
+    cop = described_class.new(config, cop_options)
     processed_source = parse_source(source)
     _investigate(cop, processed_source)
     cop.offenses
   end
 
-  def expect_no_offenses_for(source)
+  def expect_no_offenses_for(source, **cop_options)
     expect(
-      offenses_for(source)
+      offenses_for(source, cop_options)
     ).to be_empty
   end
 
@@ -104,5 +104,17 @@ describe RuboCop::Cop::DarkFinger::MigrationConstants do
     EOS
 
     expect_no_offenses_for(source)
+  end
+
+  it 'does not return errors for whitelisted constants' do
+    source = <<-EOS
+      class FooMigration < ActiveRecord::Migration[5.1]
+        def up
+          AWhitelistedConstant.something
+        end
+      end
+    EOS
+
+    expect_no_offenses_for(source, whitelisted_constants: ['AWhitelistedConstant'])
   end
 end

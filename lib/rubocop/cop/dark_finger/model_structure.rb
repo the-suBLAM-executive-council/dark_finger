@@ -68,12 +68,12 @@ module RuboCop
 
         attr_reader :required_order, :required_comments, :misc_method_names
 
-        def initialize(*args, required_order: nil, required_comments: nil, misc_method_names: nil, **_)
+        def initialize(*args, options)
           super
           @class_elements_seen = []
-          @required_order = required_order || cop_config['required_order'] || DEFAULT_REQUIRED_ORDER
-          @required_comments = required_comments || cop_config['required_comments'] || DEFAULT_REQUIRED_COMMENTS
-          @misc_method_names = misc_method_names || cop_config['misc_method_names'] || DEFAULT_MISC_METHOD_NAMES
+          @required_order = options[:required_order] || cop_config['required_order'] || DEFAULT_REQUIRED_ORDER
+          @required_comments = options[:required_comments] || cop_config['required_comments'] || DEFAULT_REQUIRED_COMMENTS
+          @misc_method_names = options[:misc_method_names] || cop_config['misc_method_names'] || DEFAULT_MISC_METHOD_NAMES
 
           # symbolize configs
           @required_order.map!(&:to_sym)

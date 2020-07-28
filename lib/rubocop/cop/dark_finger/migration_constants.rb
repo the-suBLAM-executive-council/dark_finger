@@ -12,9 +12,9 @@ module RuboCop
 
         attr_reader :allowed_constants
 
-        def initialize(*args, whitelisted_constants: nil, **_)
+        def initialize(*args, options)
           super(*args)
-          @whitelisted_constants = whitelisted_constants || cop_config['whitelisted_constants'] || []
+          @whitelisted_constants = options[:whitelisted_constants] || cop_config['whitelisted_constants'] || []
           @allowed_constants =
             DEFAULT_ALLOWED_CONSTANTS +
             allowed_top_level_constants +

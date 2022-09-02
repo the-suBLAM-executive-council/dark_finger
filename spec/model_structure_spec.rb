@@ -72,7 +72,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
         described_class::ASSOCIATION,
         described_class::VALIDATION,
         described_class::SCOPE,
-        described_class::ATTRIBUTES,
+        described_class::ATTRIBUTE,
         described_class::CALLBACK,
         described_class::CLASS_METHOD,
         described_class::INSTANCE_METHOD,
@@ -102,7 +102,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
       order: [described_class::VALIDATION, described_class::SCOPE],
       comments: {
         described_class::ASSOCIATION => '## Relationships ##',
-        described_class::ATTRIBUTES => '## Attributes ##',
+        described_class::ATTRIBUTE => '## Attributes ##',
         described_class::CALLBACK => '## Callbacks ##',
         described_class::CONSTANT => '## Constants ##',
         described_class::ENUM => '## Enums ##',
@@ -198,7 +198,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
   describe 'attributes' do
     it 'detects order violations' do
       run_and_expect_order_violation(
-        order: [described_class::ATTRIBUTES, described_class::SCOPE],
+        order: [described_class::ATTRIBUTE, described_class::SCOPE],
         source: <<-EOS
           scope :foo, -> { :bar }
           attr_reader :foo
@@ -208,7 +208,7 @@ describe RuboCop::Cop::DarkFinger::ModelStructure do
 
     it 'detects comment violations' do
       run_and_expect_comment_violation(
-        element: described_class::ATTRIBUTES,
+        element: described_class::ATTRIBUTE,
         source: <<-EOS
           ## incorrect comment ##
           attr_reader :foo

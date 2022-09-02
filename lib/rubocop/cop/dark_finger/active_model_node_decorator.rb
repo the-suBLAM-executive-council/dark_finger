@@ -27,7 +27,7 @@ module RuboCop
           elsif enum?
             ModelStructure::ENUM
           elsif attributes?
-            ModelStructure::ATTRIBUTES
+            ModelStructure::ATTRIBUTE
           elsif misc_method?
             ModelStructure::MISC
           else

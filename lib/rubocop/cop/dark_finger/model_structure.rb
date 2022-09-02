@@ -7,7 +7,7 @@ module RuboCop
         class InvalidConfigError < StandardError; end
 
         ASSOCIATION = :association
-        ATTRIBUTES = :attribute
+        ATTRIBUTE = :attribute
         CALLBACK = :callback
         CLASS_METHOD = :class_method
         CONSTANT = :constant
@@ -22,7 +22,7 @@ module RuboCop
 
         KNOWN_ELEMENTS = [
           ASSOCIATION,
-          ATTRIBUTES,
+          ATTRIBUTE,
           CALLBACK,
           CLASS_METHOD,
           CONSTANT,
@@ -44,7 +44,7 @@ module RuboCop
           ASSOCIATION,
           VALIDATION,
           SCOPE,
-          ATTRIBUTES,
+          ATTRIBUTE,
           CALLBACK,
           MISC,
           CONSTRUCTOR,
@@ -54,7 +54,7 @@ module RuboCop
 
         DEFAULT_REQUIRED_COMMENTS = {
           ASSOCIATION => '# Relationships',
-          ATTRIBUTES => '# Attributes',
+          ATTRIBUTE => '# Attributes',
           CALLBACK => '# Callbacks',
           CONSTANT => '# Constants',
           ENUM => '# Enums',

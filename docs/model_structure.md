@@ -89,7 +89,7 @@ DarkFinger/ModelStructure:
     - association
     - validation
     - scope
-    - attributes
+    - attribute
     - callback
     - misc
     - constructor

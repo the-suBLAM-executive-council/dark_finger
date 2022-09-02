@@ -12,7 +12,7 @@ describe RuboCop::Cop::DarkFinger::MigrationConstants do
 
   def expect_no_offenses_for(source, **cop_options)
     expect(
-      offenses_for(source, cop_options)
+      offenses_for(source, **cop_options)
     ).to be_empty
   end
 
